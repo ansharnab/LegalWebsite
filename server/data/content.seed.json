@@ -12,9 +12,9 @@
     "email": "",
     "phone": "",
     "address": "New Delhi, Delhi, India",
-    "footerTagline": "Research-driven advocacy in insolvency, arbitration, corporate law, and dispute resolution — New Delhi, India.",
-    "disclaimerParagraph1": "The Bar Council of India does not permit advertisement or solicitation by advocates in any form or manner. By accessing this website, you acknowledge and confirm that you are seeking information relating to Advocate Saumya Upadhyay of your own accord and that there has been no form of solicitation, advertisement or inducement.",
-    "disclaimerParagraph2": "The content of this website is for informational purposes only and should not be interpreted as soliciting or advertisement. No material/information provided on this website should be construed as legal advice. The Firm shall not be liable for the consequences of any action taken by relying on the material/information provided on this website."
+    "footerTagline": "Insolvency, arbitration, corporate law, and dispute resolution — New Delhi, India.",
+    "disclaimerParagraph1": "",
+    "disclaimerParagraph2": ""
   },
   "site": {
     "features": [
@@ -34,7 +34,7 @@
             "type": "legalHero",
             "props": {
               "eyebrow": "Advocate · New Delhi",
-              "title": "Research-Driven Advocacy\nfor Complex Legal Challenges.",
+              "title": "Advocacy in insolvency, arbitration,\ncorporate law, and dispute resolution.",
               "subtitle": "Deputy Counsel at the Delhi International Arbitration Centre. LLM (Business Laws), NLSIU · UGC-NET. Insolvency, arbitration, corporate, IP, and cyber law.",
               "primaryLabel": "Schedule Consultation",
               "primaryLink": "#contact",
@@ -47,7 +47,7 @@
               "stat2": "LLM",
               "label2": "NLSIU Bangalore",
               "stat3": "UGC-NET",
-              "label3": "Qualified",
+              "label3": "Exam",
               "heroTone": "lavender",
               "imagePosition": "right"
             },
@@ -57,8 +57,8 @@
             "id": "s2",
             "type": "legalAbout",
             "props": {
-              "title": "Professional Profile",
-              "body": "I am an Advocate and a conscientious student of law with a passion for researching and exploring the unexplored. I currently serve as Deputy Counsel at the Delhi International Arbitration Centre. My core interests include insolvency law, alternative dispute resolution, contract law, constitutional law, corporate laws (especially intellectual property), cyber law including data protection, competition law, and taxation.\n\nI hold an LLM in Business Law from the National Law School of India University, Bangalore, and am UGC-NET qualified. I am enrolled with the Bar Council of India and the Bar Council of Bihar. Alongside practice, I teach as Online Faculty at LawSikho and have appeared before the Supreme Court, Delhi High Court, district courts, and tribunals on civil, commercial, insolvency, and arbitration matters.",
+              "title": "Profile",
+              "body": "I am an Advocate and Deputy Counsel at the Delhi International Arbitration Centre. I work on insolvency law, alternative dispute resolution, contract law, constitutional law, corporate law (including intellectual property), cyber law and data protection, competition law, and taxation.\n\nI hold an LLM in Business Law from the National Law School of India University, Bangalore, and UGC-NET. I am enrolled with the Bar Council of India and the Bar Council of Bihar. I teach as Online Faculty at LawSikho and have appeared before the Supreme Court, Delhi High Court, district courts, and tribunals on civil, commercial, insolvency, and arbitration matters.",
               "advocateName": "Advocate Saumya Upadhyay",
               "advocateHeadline": "Advocate | LLM (Business Laws), NLSIU | UGC-NET",
               "advocateRole": "Deputy Counsel, Delhi International Arbitration Centre",
@@ -81,8 +81,8 @@
             "id": "s4",
             "type": "testimonials",
             "props": {
-              "title": "Professional Endorsements",
-              "subtitle": "Endorsements from colleagues and the legal community."
+              "title": "References",
+              "subtitle": "Notes from colleagues and the legal community."
             },
             "style": { "theme": "light", "padding": "default" }
           },
@@ -100,7 +100,7 @@
             "type": "legalCta",
             "props": {
               "title": "Need legal guidance?",
-              "text": "Book a consultation — inquiries are reviewed promptly.",
+              "text": "Book a consultation.",
               "buttonLabel": "Contact",
               "buttonLink": "#contact"
             },

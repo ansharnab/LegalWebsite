@@ -152,7 +152,7 @@ function PublicationCard({ pub }) {
 
 export function LegalHeroBlock({
   eyebrow = "Advocate · New Delhi",
-  title = "Research-Driven Advocacy\nfor Complex Legal Challenges.",
+  title = "Advocacy in insolvency, arbitration,\ncorporate law, and dispute resolution.",
   subtitle = "",
   primaryLabel = "Schedule Consultation",
   primaryLink = "#contact",
@@ -165,7 +165,7 @@ export function LegalHeroBlock({
   stat2 = "LLM",
   label2 = "NLSIU Bangalore",
   stat3 = "UGC-NET",
-  label3 = "Qualified",
+  label3 = "Exam",
   heroTone = "lavender",
   imagePosition = "right",
 }) {
@@ -223,7 +223,7 @@ export function LegalHeroBlock({
           <HeroStatLink
             href="#about"
             className="hero__credentials"
-            aria-label="View professional profile — experience, qualifications, and credentials"
+            aria-label="View profile — experience and qualifications"
           >
             <div className="hero__credentials-grid">
               {credentials.map((item, i) => (
@@ -240,7 +240,7 @@ export function LegalHeroBlock({
                 </div>
               ))}
             </div>
-            <span className="hero__credentials-go">View professional profile →</span>
+            <span className="hero__credentials-go">View profile →</span>
             <span className="hero__stat-shine" aria-hidden="true" />
           </HeroStatLink>
         </div>
@@ -285,7 +285,7 @@ export function LegalStatsBlock({ stat1, label1, stat2, label2, stat3, label3, s
 }
 
 export function LegalAboutBlock({
-  title = "Professional Profile",
+  title = "Profile",
   body,
   buttonLabel = "Get in Touch",
   buttonLink = "#contact",
@@ -393,7 +393,7 @@ export function PracticeAreasBlock({ title = "Practice Areas", subtitle = "" }) 
   );
 }
 
-export function TestimonialsBlock({ title = "Professional Endorsements", subtitle = "" }) {
+export function TestimonialsBlock({ title = "References", subtitle = "" }) {
   const ctx = useSiteDataOptional();
   const items = ctx?.testimonials || defaultTestimonials;
 
@@ -401,7 +401,7 @@ export function TestimonialsBlock({ title = "Professional Endorsements", subtitl
     <section id="testimonials" className="section testimonials">
       <div className="container">
         <Reveal as="header" className="section-head" variant="blur">
-          <p className="eyebrow">Endorsements</p>
+          <p className="eyebrow">References</p>
           <h2>
             <VeEditable field="title">{title}</VeEditable>
           </h2>

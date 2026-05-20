@@ -2,11 +2,11 @@
 
 export const SITE_NAV = [
   { label: "Home", href: "#hero", id: "hero", hash: true },
-  { label: "About", href: "#about", id: "about", hash: true },
-  { label: "Practice", href: "#practice-areas", id: "practice-areas", hash: true },
+  { label: "Profile", href: "#about", id: "about", hash: true },
+  { label: "Practice Areas", href: "#practice-areas", id: "practice-areas", hash: true, short: "Practice" },
   { label: "Articles", href: "/articles", id: "articles", route: true },
   { label: "Publications", href: "/publications", id: "publications", route: true, short: "Pubs" },
-  { label: "Testimonials", href: "#testimonials", id: "testimonials", hash: true, short: "Reviews" },
+  { label: "References", href: "#testimonials", id: "testimonials", hash: true },
   { label: "Contact", href: "#contact", id: "contact", hash: true },
 ];
 

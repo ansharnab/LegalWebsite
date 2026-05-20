@@ -15,8 +15,8 @@ export default function HomePage() {
     <>
       <LegalHeroBlock
         heroTone="lavender"
-        title={"Research-Driven Advocacy\nfor Complex Legal Challenges."}
-        subtitle="Deputy Counsel at the Delhi International Arbitration Centre. LLM (Business Laws), NLSIU · UGC-NET."
+        title={"Advocacy in insolvency, arbitration,\ncorporate law, and dispute resolution."}
+        subtitle="Deputy Counsel at the Delhi International Arbitration Centre. LLM (Business Laws), NLSIU · UGC-NET. Insolvency, arbitration, corporate, IP, and cyber law."
         image={IMAGES.heroPortrait}
         backgroundImage={IMAGES.heroBg}
         stat1="6+"
@@ -24,16 +24,16 @@ export default function HomePage() {
         stat2="LLM"
         label2="NLSIU Bangalore"
         stat3="UGC-NET"
-        label3="Qualified"
+        label3="Exam"
       />
-      <LegalAboutBlock title="Professional Profile" body={ATTORNEY.about} image={IMAGES.about} />
+      <LegalAboutBlock title="Profile" body={ATTORNEY.about} image={IMAGES.about} />
       <PracticeAreasBlock
         title="Practice Areas"
         subtitle="Insolvency, arbitration, corporate, intellectual property, cyber law, and litigation."
       />
       <TestimonialsBlock
-        title="Professional Endorsements"
-        subtitle="Endorsements from colleagues and the legal community."
+        title="References"
+        subtitle="Notes from colleagues and the legal community."
       />
       <LegalContactBlock
         title="Get In Touch"

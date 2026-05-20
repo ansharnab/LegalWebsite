@@ -8,7 +8,7 @@ export default function PublicationsPage() {
         id="publications-hero"
         eyebrow="Published work"
         title="Publications"
-        subtitle="Selected articles, commentary, and academic writing in insolvency, ADR, and corporate law."
+        subtitle="Articles, commentary, and writing in insolvency, ADR, and corporate law."
       />
       <PublicationsListBlock hideHead />
       <LegalCtaBlock

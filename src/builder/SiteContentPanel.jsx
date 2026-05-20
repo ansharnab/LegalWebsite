@@ -441,16 +441,16 @@ export default function SiteContentPanel({
             <Field label="Address">
               <textarea rows={3} value={s.address || ""} onChange={(e) => patchSettings({ address: e.target.value })} />
             </Field>
-            <Field label="Disclaimer paragraph 1">
+            <Field label="Disclaimer bullet 1 (optional — leave blank for site default)">
               <textarea
-                rows={4}
+                rows={2}
                 value={s.disclaimerParagraph1 || ""}
                 onChange={(e) => patchSettings({ disclaimerParagraph1: e.target.value })}
               />
             </Field>
-            <Field label="Disclaimer paragraph 2">
+            <Field label="Disclaimer bullet 2 (optional)">
               <textarea
-                rows={4}
+                rows={2}
                 value={s.disclaimerParagraph2 || ""}
                 onChange={(e) => patchSettings({ disclaimerParagraph2: e.target.value })}
               />

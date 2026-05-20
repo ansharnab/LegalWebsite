@@ -8,7 +8,7 @@ export default function ArticlesPage() {
         id="articles-hero"
         eyebrow="Insights"
         title="Articles & Commentary"
-        subtitle="Research notes and commentary on insolvency, arbitration, corporate law, and dispute resolution."
+        subtitle="Writing on insolvency, arbitration, corporate law, and dispute resolution."
       />
       <ArticlesListBlock hideHead />
       <LegalCtaBlock

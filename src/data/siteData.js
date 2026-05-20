@@ -7,7 +7,7 @@ export const practiceAreas = [
     icon: PRACTICE_ICONS_BY_ID.insolvency,
     title: "Insolvency & Bankruptcy",
     summary:
-      "Corporate insolvency, restructuring, and disputes before NCLT, NCLAT, and courts — informed by published work on the IBC.",
+      "Corporate insolvency, restructuring, and disputes before NCLT, NCLAT, and courts under the IBC.",
     image: IMAGES.practice.insolvency,
   },
   {
@@ -39,7 +39,7 @@ export const practiceAreas = [
     icon: PRACTICE_ICONS_BY_ID.cyber,
     title: "Cyber Law & Data Protection",
     summary:
-      "Data protection, privacy compliance, cyber-crime, and emerging technology law — backed by a PG Certificate in Cybersecurity & Ethical Hacking (IIT Patna).",
+      "Data protection, privacy compliance, cyber-crime, and technology law. PG Certificate in Cybersecurity & Ethical Hacking (IIT Patna).",
     image: IMAGES.practice.cyber,
   },
   {
@@ -56,24 +56,23 @@ export const defaultTestimonials = [
   {
     id: "t1",
     quote:
-      "Saumya is an outstanding advocate with a profound grasp of the law and an exceptional ability to dissect complex legal issues. Her attention to detail and thorough research are unparalleled.",
+      "Works on insolvency matters with structured research and preparation for hearings and filings.",
     name: "Anil Khanna",
-    role: "Professional connection",
+    role: "Colleague",
     initials: "AK",
   },
   {
     id: "t2",
     quote:
-      "She demonstrated a profound understanding of the law and a remarkable ability to develop strategic solutions to intricate legal challenges — with a strong track record in insolvency, electricity law, and arbitration.",
+      "Worked together on insolvency, electricity law, and arbitration matters at Sarthak Advocates & Solicitors.",
     name: "Rahul Bangia",
     role: "Former colleague, Sarthak Advocates & Solicitors",
     initials: "RB",
   },
   {
     id: "t3",
-    quote:
-      "A conscientious student of law with deep expertise across insolvency, ADR, corporate law, and cyber regulations — and a genuine passion for teaching and writing on contemporary legal issues.",
-    name: "Peer endorsement",
+    quote: "Writes and teaches on insolvency, ADR, corporate law, and cyber law.",
+    name: "Peer note",
     role: "Legal community",
     initials: "LE",
   },

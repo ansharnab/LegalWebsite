@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import { DisclaimerLogoMark } from "./SiteLogoMark";
 
@@ -12,18 +13,28 @@ export function requestDisclaimer() {
   }
 }
 
-const DEFAULT_P1 =
-  "The Bar Council of India does not permit advertisement or solicitation by advocates in any form or manner. By accessing this website, you acknowledge and confirm that you are seeking information relating to Advocate Saumya Upadhyay of your own accord and that there has been no form of solicitation, advertisement or inducement.";
+const DEFAULT_POINTS = [
+  "The Bar Council of India does not permit advertisement or solicitation by advocates.",
+  "You are accessing this site on your own initiative, without solicitation or inducement.",
+  "Material on this site is for information only and is not legal advice.",
+  "No lawyer–client relationship is created by use of this website.",
+];
 
-const DEFAULT_P2 =
-  "The content of this website is for informational purposes only and should not be interpreted as soliciting or advertisement. No material/information provided on this website should be construed as legal advice.";
+function disclaimerPoints(settings) {
+  const p1 = settings.disclaimerParagraph1?.trim();
+  const p2 = settings.disclaimerParagraph2?.trim();
+  if (p1 || p2) {
+    return [p1, p2].filter(Boolean);
+  }
+  return DEFAULT_POINTS;
+}
 
 /**
  * Full-screen gate — site is not shown until the user clicks I Agree.
  */
 export default function DisclaimerGate({ settings = {}, onAgree }) {
-  const p1 = settings.disclaimerParagraph1 || DEFAULT_P1;
-  const p2 = settings.disclaimerParagraph2 || DEFAULT_P2;
+  const [declined, setDeclined] = useState(false);
+  const points = disclaimerPoints(settings);
 
   return createPortal(
     <div
@@ -34,20 +45,58 @@ export default function DisclaimerGate({ settings = {}, onAgree }) {
     >
       <div className="disclaimer-gate__card">
         <DisclaimerLogoMark settings={settings} />
-        <p className="disclaimer-gate__eyebrow">Legal notice</p>
-        <h1 id="disclaimer-gate-title" className="disclaimer-gate__title">
-          Disclaimer
-        </h1>
-        <div className="disclaimer-gate__body">
-          <p>{p1}</p>
-          <p>{p2}</p>
-        </div>
-        <p className="disclaimer-gate__required">
-          You must read and accept this disclaimer to access the website.
-        </p>
-        <button type="button" className="btn btn--primary disclaimer-gate__btn" onClick={onAgree}>
-          I Agree — Enter Website
-        </button>
+        {!declined ? (
+          <>
+            <h1 id="disclaimer-gate-title" className="disclaimer-gate__title">
+              Disclaimer
+            </h1>
+            <p className="disclaimer-gate__lead">
+              Please read the following before you continue. This is not a legal notice.
+            </p>
+            <ul className="disclaimer-gate__list">
+              {points.map((text) => (
+                <li key={text}>{text}</li>
+              ))}
+            </ul>
+            <p className="disclaimer-gate__required">
+              Select <strong>I Agree</strong> to enter the site, or <strong>Don&apos;t Agree</strong> to
+              leave.
+            </p>
+            <div className="disclaimer-gate__actions">
+              <button
+                type="button"
+                className="btn btn--outline disclaimer-gate__btn disclaimer-gate__btn--decline"
+                onClick={() => setDeclined(true)}
+              >
+                Don&apos;t Agree
+              </button>
+              <button type="button" className="btn btn--primary disclaimer-gate__btn" onClick={onAgree}>
+                I Agree
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="disclaimer-gate__declined">
+            <h2 className="disclaimer-gate__declined-title">Access not granted</h2>
+            <p>
+              You chose not to accept the disclaimer. This website is only available to visitors who
+              agree.
+            </p>
+            <p>You may close this tab or return to review the disclaimer.</p>
+            <div className="disclaimer-gate__actions">
+              <button
+                type="button"
+                className="btn btn--outline disclaimer-gate__btn"
+                onClick={() => setDeclined(false)}
+              >
+                Back to disclaimer
+              </button>
+              <button type="button" className="btn btn--primary disclaimer-gate__btn" onClick={onAgree}>
+                I Agree
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>,
     document.body

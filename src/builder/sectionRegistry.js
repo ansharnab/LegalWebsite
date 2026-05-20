@@ -27,7 +27,7 @@ export const SECTION_TYPES = {
     component: LegalHeroBlock,
     defaultProps: {
       eyebrow: "Advocate · New Delhi",
-      title: "Research-Driven Advocacy\nfor Complex Legal Challenges.",
+      title: "Advocacy in insolvency, arbitration,\ncorporate law, and dispute resolution.",
       subtitle:
         "Deputy Counsel at the Delhi International Arbitration Centre. LLM (Business Laws), NLSIU · UGC-NET. Insolvency, arbitration, corporate, IP, and cyber law.",
       primaryLabel: "Schedule Consultation",
@@ -41,7 +41,7 @@ export const SECTION_TYPES = {
       stat2: "LLM",
       label2: "NLSIU Bangalore",
       stat3: "UGC-NET",
-      label3: "Qualified",
+      label3: "Exam",
       heroTone: "lavender",
       imagePosition: "right",
     },
@@ -111,7 +111,7 @@ export const SECTION_TYPES = {
     icon: "fa-scale-balanced",
     component: LegalAboutBlock,
     defaultProps: {
-      title: "Professional Profile",
+      title: "Profile",
       body: ATTORNEY.about,
       advocateName: ATTORNEY.name,
       advocateHeadline: ATTORNEY.headline,
@@ -146,8 +146,8 @@ export const SECTION_TYPES = {
     icon: "fa-quote-left",
     component: TestimonialsBlock,
     defaultProps: {
-      title: "Client Testimonials",
-      subtitle: "Endorsements from colleagues and the legal community.",
+      title: "References",
+      subtitle: "Notes from colleagues and the legal community.",
     },
     fields: [
       { key: "title", label: "Section title", type: "text" },
@@ -174,7 +174,7 @@ export const SECTION_TYPES = {
     component: LegalCtaBlock,
     defaultProps: {
       title: "Need legal guidance?",
-      text: "Book a free consultation — we respond within one business day.",
+      text: "Book a consultation.",
       buttonLabel: "Contact Us",
       buttonLink: "#contact",
     },
@@ -258,7 +258,7 @@ export function getDefaultSections(pageId) {
           eyebrow: "Insights",
           title: "Articles & Commentary",
           subtitle:
-            "Research notes and commentary on insolvency, arbitration, corporate law, and dispute resolution.",
+            "Writing on insolvency, arbitration, corporate law, and dispute resolution.",
         },
       },
       {
@@ -286,7 +286,7 @@ export function getDefaultSections(pageId) {
           eyebrow: "Published work",
           title: "Publications",
           subtitle:
-            "Selected articles, commentary, and academic writing in insolvency, ADR, and corporate law.",
+            "Articles, commentary, and writing in insolvency, ADR, and corporate law.",
         },
       },
       {

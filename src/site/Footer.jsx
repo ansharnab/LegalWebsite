@@ -8,7 +8,7 @@ export default function Footer({ settings = {} }) {
   const name = settings.advocateName || "Advocate Saumya Upadhyay";
   const tagline =
     settings.footerTagline ||
-    "Research-driven advocacy in insolvency, arbitration, corporate law, and dispute resolution — New Delhi, India.";
+    "Insolvency, arbitration, corporate law, and dispute resolution — New Delhi, India.";
   const linkedIn = settings.linkedInUrl;
 
   return (
@@ -27,7 +27,7 @@ export default function Footer({ settings = {} }) {
             <Link to="/publications">Publications</Link>
           </p>
           <p>
-            <Link to="/#about">About</Link>
+            <Link to="/#about">Profile</Link>
           </p>
           <p>
             <Link to="/#practice-areas">Practice areas</Link>

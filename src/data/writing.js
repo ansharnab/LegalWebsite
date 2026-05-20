@@ -5,7 +5,7 @@ export const defaultArticles = [
     id: "ibc-overview",
     title: "Overview of India's Insolvency and Bankruptcy Code",
     excerpt:
-      "A practitioner-oriented look at the IBC framework, resolution timelines, and how creditors and corporate debtors navigate the insolvency process in India.",
+      "Notes on the IBC framework, resolution timelines, and how creditors and corporate debtors navigate the insolvency process in India.",
     body:
       "The Insolvency and Bankruptcy Code, 2016 consolidated India's fragmented insolvency regime into a time-bound process led by the National Company Law Tribunal. For corporate debtors, the emphasis on resolution rather than liquidation has shifted how boards, financial creditors, and operational creditors negotiate standstill and restructuring terms.\n\nThis note outlines key stages — default, admission, moratorium, resolution plan, and liquidation — and the practical questions counsel face on interim financing, related-party bids, and appeals to the National Company Law Appellate Tribunal.",
     category: "Insolvency",
@@ -33,7 +33,7 @@ export const defaultArticles = [
     excerpt:
       "Examining director responsibility, piercing the corporate veil in practice, and compliance lessons for boards and in-house counsel.",
     body:
-      "Director liability under the Companies Act spans statutory duties, fraud provisions, and lifting the corporate veil in exceptional cases. Boards should map personal exposure across filings, related-party transactions, and insolvency-triggering events.\n\nThe piece surveys leading principles on vicarious liability, D&O risk, and compliance systems that reduce exposure without chilling legitimate commercial decision-making.",
+      "Director liability under the Companies Act spans statutory duties, fraud provisions, and lifting the corporate veil in specific cases. Boards should map personal exposure across filings, related-party transactions, and insolvency-triggering events.\n\nThe piece surveys principles on vicarious liability, D&O risk, and compliance systems for board decision-making.",
     category: "Corporate Law",
     date: "2023-06-20",
     readMinutes: 10,
@@ -44,7 +44,7 @@ export const defaultArticles = [
     id: "arbitration-seats",
     title: "Choosing Seats and Rules in Domestic Commercial Arbitration",
     excerpt:
-      "Practical factors for counsel when drafting arbitration clauses — institution rules, seat, and enforceability considerations in India.",
+      "Factors for counsel when drafting arbitration clauses — institution rules, seat, and enforceability considerations in India.",
     body:
       "Seat and institutional rules determine procedural law, court support, and enforcement pathways. Domestic parties often default to DIAC, MCIA, or ad hoc arbitration without aligning seat with the place of performance or assets.\n\nCounsel should weigh emergency arbitrator provisions, consolidation, multi-contract disputes, and Delhi-seated vs. other Indian seats when drafting commercial arbitration clauses.",
     category: "Arbitration & ADR",
