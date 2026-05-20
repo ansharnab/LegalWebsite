@@ -1,0 +1,509 @@
+/* Motion & animations — respects prefers-reduced-motion */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .site-nav__glider,
+  .reveal,
+  .stagger-in > *,
+  .nav-drawer__list li,
+  .disclaimer-gate__card > * {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+/* —— Scroll reveal —— */
+.reveal {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition:
+    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal--fade {
+  transform: none;
+}
+
+.reveal--left {
+  transform: translateX(-1.5rem);
+}
+
+.reveal--right {
+  transform: translateX(1.5rem);
+}
+
+.reveal--scale {
+  transform: scale(0.96);
+}
+
+.reveal--blur {
+  transform: translateY(1rem);
+  filter: blur(6px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* Page content entrance after preloader */
+.site-shell.is-ready .site-main {
+  animation: site-main-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.15s;
+}
+
+@keyframes site-main-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Card hover micro-motion */
+.practice-card,
+.testimonial-card,
+.writing-card--expandable,
+.publication-item--expandable {
+  transition:
+    transform 0.35s var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+    box-shadow 0.35s ease,
+    border-color 0.3s ease;
+}
+
+.writing-card__toggle {
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.writing-card--expandable[open] .writing-card__toggle,
+.publication-item--expandable[open] .writing-card__toggle {
+  transform: translateY(-1px);
+}
+
+/* Stagger children when parent is revealed */
+.reveal.is-visible .stagger-in > *,
+.disclaimer-gate__card.stagger-in > * {
+  animation: stagger-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--stagger-i, 0) * 70ms + 80ms);
+}
+
+.stagger-in > * {
+  --stagger-i: 0;
+}
+.stagger-in > *:nth-child(1) {
+  --stagger-i: 0;
+}
+.stagger-in > *:nth-child(2) {
+  --stagger-i: 1;
+}
+.stagger-in > *:nth-child(3) {
+  --stagger-i: 2;
+}
+.stagger-in > *:nth-child(4) {
+  --stagger-i: 3;
+}
+.stagger-in > *:nth-child(5) {
+  --stagger-i: 4;
+}
+.stagger-in > *:nth-child(6) {
+  --stagger-i: 5;
+}
+.stagger-in > *:nth-child(7) {
+  --stagger-i: 6;
+}
+.stagger-in > *:nth-child(8) {
+  --stagger-i: 7;
+}
+
+@keyframes stagger-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.85rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* —— Hero entrance —— */
+.site-shell.is-ready .hero__eyebrow,
+.site-shell.is-ready .hero__title,
+.site-shell.is-ready .hero__lead,
+.site-shell.is-ready .hero__actions,
+.site-shell.is-ready .hero__credentials,
+.site-shell.is-ready .hero__portrait-wrap,
+.site-shell.is-ready .hero__scroll-hint {
+  animation: hero-enter 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.site-shell.is-ready .hero__eyebrow {
+  animation-delay: 0.05s;
+}
+.site-shell.is-ready .hero__title {
+  animation-delay: 0.12s;
+}
+.site-shell.is-ready .hero__lead {
+  animation-delay: 0.2s;
+}
+.site-shell.is-ready .hero__actions {
+  animation-delay: 0.28s;
+}
+.site-shell.is-ready .hero__credentials {
+  animation-delay: 0.34s;
+}
+.site-shell.is-ready .hero__portrait-wrap {
+  animation-delay: 0.16s;
+  animation-name: hero-enter-portrait;
+}
+.site-shell.is-ready .hero__scroll-hint {
+  animation-delay: 0.55s;
+}
+
+/* Per-stat cards removed — single .hero__credentials card animates via polish.css */
+
+@keyframes hero-stat-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.hero__credentials:focus-visible {
+  outline: 2px solid var(--color-accent-soft);
+  outline-offset: 3px;
+}
+
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(1.1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-enter-portrait {
+  from {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* —— Buttons —— */
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 60%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.55s ease;
+  pointer-events: none;
+}
+
+.btn:hover::after {
+  transform: translateX(120%);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* —— Section eyebrows —— */
+.reveal.is-visible .eyebrow,
+.section-head.is-visible .eyebrow {
+  animation: eyebrow-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes eyebrow-in {
+  from {
+    opacity: 0;
+    letter-spacing: 0.2em;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.12em;
+  }
+}
+
+/* —— Practice cards —— */
+.reveal.practice-card.is-visible .practice-card__body > i {
+  animation: icon-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+@keyframes icon-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.practice-card:hover .practice-card__body > i {
+  animation: icon-bounce 0.45s ease;
+}
+
+@keyframes icon-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-4px);
+  }
+}
+
+/* —— Testimonial quote mark —— */
+.reveal.testimonial-card.is-visible .testimonial-card__mark {
+  animation: quote-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes quote-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5) translateY(0.5rem);
+  }
+  to {
+    opacity: 0.25;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* —— Stats band —— */
+.reveal.stats-band__item.is-visible {
+  animation: hero-stat-card-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.reveal.stats-band__item.is-visible strong {
+  animation: stat-pop 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.12s;
+}
+
+@keyframes stat-pop {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* —— Mobile nav drawer —— */
+.nav-menu .nav-drawer__list li {
+  animation: nav-item-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.nav-menu .nav-drawer__list li:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.nav-menu .nav-drawer__list li:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.nav-menu .nav-drawer__list li:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.nav-menu .nav-drawer__list li:nth-child(4) {
+  animation-delay: 0.25s;
+}
+.nav-menu .nav-drawer__list li:nth-child(5) {
+  animation-delay: 0.3s;
+}
+
+.nav-menu .nav-drawer__cta {
+  animation: nav-item-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+}
+
+@keyframes nav-item-in {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* —— Disclaimer gate —— */
+.disclaimer-gate {
+  animation: gate-bg-in 0.5s ease both;
+}
+
+.disclaimer-gate__card {
+  animation: gate-card-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+.disclaimer-gate__icon {
+  animation: icon-pop 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+
+@keyframes gate-bg-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes gate-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* —— Preloader —— */
+.preloader__brand {
+  animation: preloader-brand 0.8s ease both;
+}
+
+.preloader__spinner {
+  animation: spin 0.8s linear infinite, preloader-fade 0.8s ease 0.15s both;
+}
+
+@keyframes preloader-brand {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes preloader-fade {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes preloader-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.preloader--done {
+  animation: preloader-out 0.45s ease forwards;
+  pointer-events: none;
+}
+
+/* —— Ambient loops (in main.css refs) —— */
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes orb-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(12px, -18px) scale(1.05);
+  }
+}
+
+@keyframes gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes shimmer-line {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Builder preview: show content immediately */
+.ve-canvas .reveal {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: none;
+}
+
+.ve-canvas .site-shell.is-ready .hero__eyebrow,
+.ve-canvas .site-shell.is-ready .hero__title,
+.ve-canvas .site-shell.is-ready .hero__lead,
+.ve-canvas .site-shell.is-ready .hero__actions,
+.ve-canvas .site-shell.is-ready .hero__stats,
+.ve-canvas .site-shell.is-ready .hero__portrait-wrap,
+.ve-canvas .site-shell.is-ready .hero__stat,
+.ve-canvas .site-shell.is-ready .hero__scroll-hint {
+  animation: none;
+}

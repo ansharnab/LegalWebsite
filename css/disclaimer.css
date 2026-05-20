@@ -1,0 +1,84 @@
+/* Disclaimer Modal */
+.disclaimer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.4);
+    /* Dark semi-transparent background */
+    z-index: 2000;
+    /* Higher than header */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.disclaimer-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.disclaimer-content {
+    background-color: var(--color-white);
+    padding: 2.5rem;
+    border-radius: 8px;
+    max-width: 800px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--color-border);
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.disclaimer-overlay.active .disclaimer-content {
+    transform: translateY(0);
+}
+
+.disclaimer-title {
+    font-size: 1.75rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 1rem;
+    display: inline-block;
+    width: 100%;
+}
+
+.disclaimer-text {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    margin-bottom: 2rem;
+    max-height: 60vh;
+    overflow-y: auto;
+    line-height: 1.7;
+    padding-right: 0.5rem;
+    /* Space for scrollbar */
+}
+
+.disclaimer-text p {
+    margin-bottom: 1rem;
+}
+
+.disclaimer-text p:last-child {
+    margin-bottom: 0;
+}
+
+/* Blur Effect */
+body.modal-open {
+    overflow: hidden;
+    /* Prevent scrolling body when modal is open */
+}
+
+/* Blur everything except the modal */
+body.modal-open>*:not(#disclaimer-modal) {
+    filter: blur(8px);
+    pointer-events: none;
+    user-select: none;
+}

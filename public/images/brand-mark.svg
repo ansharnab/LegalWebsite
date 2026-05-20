@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" role="img" aria-label="Legal services">
+  <defs>
+    <linearGradient id="brand-grad" x1="6" y1="4" x2="42" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9a7ab5"/>
+      <stop offset="1" stop-color="#5b3c88"/>
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="12" fill="url(#brand-grad)"/>
+  <path
+    d="M24 10c-4.2 0-7 2.8-7 6.8 0 2.8 1.6 4.6 4.2 5.8l-1.2 8.4h8l-1.2-8.4c2.6-1.2 4.2-3 4.2-5.8 0-4-2.8-6.8-7-6.8z"
+    fill="#ffffff"
+    opacity="0.95"
+  />
+  <path d="M14 36h20" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" opacity="0.8"/>
+</svg>

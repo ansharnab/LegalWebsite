@@ -1,0 +1,744 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import axios from "axios";
+import {
+  PAGE_OPTIONS,
+  SECTION_TYPES,
+  getDefaultSections,
+} from "./sectionRegistry";
+import SiteContentPanel from "./SiteContentPanel";
+import PreviewChrome from "./PreviewChrome";
+import { ActiveSectionProvider } from "../context/ActiveSectionContext";
+import PreviewCanvasMenu from "./PreviewCanvasMenu";
+import { PreviewNavProvider, usePreviewNav } from "./PreviewNavContext";
+import EditorToast from "./EditorToast";
+import SectionInspector from "./SectionInspector";
+import SiteHeaderInspector from "./SiteHeaderInspector";
+import { normalizeBrandSettings } from "../utils/brandSettings";
+import StyledSectionWrap from "./StyledSectionWrap";
+import { VeEditScope } from "./VeInlineEdit";
+import { defaultStyleForType, normalizeSection } from "./editorTheme";
+import { SiteDataContext } from "../context/SiteDataContext";
+import { mergeSiteContent } from "../utils/mergeSiteData";
+import "./visual-editor.css";
+
+const EDITOR_MODES = [
+  { id: "pages", label: "Pages", icon: "fa-file-lines" },
+  { id: "site", label: "Site Content", icon: "fa-sliders" },
+];
+
+const PREVIEW_DEVICES = [
+  { id: "desktop", label: "Desktop", icon: "fa-desktop", width: 1100 },
+  { id: "tablet", label: "Tablet", icon: "fa-tablet-screen-button", width: 768 },
+  { id: "mobile", label: "Mobile", icon: "fa-mobile-screen-button", width: 390 },
+];
+
+function PreviewDeviceBar({ previewDevice, setPreviewDevice, activeDevice, switching }) {
+  return (
+    <div
+      className={`ve-preview-strip${switching ? " ve-preview-strip--switching" : ""}`}
+      role="toolbar"
+      aria-label="Preview screen size"
+    >
+      <span className="ve-preview-strip__label">
+        <i className="fa-solid fa-display" aria-hidden="true" />
+        Screen size
+      </span>
+      <div className="ve-preview-strip__buttons">
+        {PREVIEW_DEVICES.map((device) => (
+          <button
+            key={device.id}
+            type="button"
+            className={previewDevice === device.id ? "is-active" : ""}
+            onClick={() => setPreviewDevice(device.id)}
+            title={`${device.label} (${device.width}px wide)`}
+          >
+            <i className={`fa-solid ${device.icon}`} aria-hidden="true" />
+            {device.label}
+          </button>
+        ))}
+      </div>
+      <span className="ve-preview-strip__size">{activeDevice.width}px preview</span>
+    </div>
+  );
+}
+
+function authHeaders() {
+  return { Authorization: `Bearer ${localStorage.getItem("legal-advisor-admin-token")}` };
+}
+
+function newId() {
+  return `s-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+}
+
+const PAGE_PATH = { home: "/", articles: "/articles", publications: "/publications" };
+
+function pickDefaultSectionId(list) {
+  if (!list?.length) return null;
+  const hero = list.find((s) => s.type === "legalHero");
+  return hero?.id ?? list[0].id;
+}
+
+function PreviewDeviceMenuReset({ device }) {
+  const { closeMenu } = usePreviewNav() ?? {};
+  const prevDevice = useRef(device);
+  useEffect(() => {
+    if (prevDevice.current !== device) {
+      closeMenu?.();
+      prevDevice.current = device;
+    }
+  }, [device, closeMenu]);
+  return null;
+}
+
+export default function VisualEditor() {
+  const [editorMode, setEditorMode] = useState("pages");
+  const [siteTab, setSiteTab] = useState("brand");
+  const [pageId, setPageId] = useState("home");
+  const [sections, setSections] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
+  const [enabled, setEnabled] = useState(false);
+  const [content, setContent] = useState({ pages: {}, settings: {} });
+  const [status, setStatus] = useState("");
+  const [addType, setAddType] = useState("legalHero");
+  const [saving, setSaving] = useState(false);
+  const [previewDevice, setPreviewDevice] = useState("desktop");
+  const [deviceSwitching, setDeviceSwitching] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  const [toast, setToast] = useState({ message: "", type: "success" });
+  const [newSectionId, setNewSectionId] = useState(null);
+  const [chromeSelected, setChromeSelected] = useState(false);
+  const [chromeFocus, setChromeFocus] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const deviceSwitchTimer = useRef(null);
+  const canvasWrapRef = useRef(null);
+  const savedSnapshot = useRef("");
+
+  const markDirty = useCallback(() => setDirty(true), []);
+
+  const loadPage = useCallback((id, allContent, opts = {}) => {
+    const { selectFirstSection = false } = opts;
+    const page = allContent?.pages?.[id];
+    const saved = page?.sections;
+    let nextSections;
+    let nextEnabled;
+    if (saved?.items?.length) {
+      nextSections = saved.items.map((s) => normalizeSection(s));
+      nextEnabled = saved.enabled !== false;
+    } else {
+      nextSections = getDefaultSections(id);
+      nextEnabled = false;
+    }
+    setSections(nextSections);
+    setEnabled(nextEnabled);
+    setChromeSelected(false);
+    setChromeFocus(null);
+    if (selectFirstSection) {
+      setSelectedId(pickDefaultSectionId(nextSections));
+    } else {
+      setSelectedId(null);
+    }
+    setDirty(false);
+    savedSnapshot.current = JSON.stringify({ sections: nextSections, enabled: nextEnabled });
+  }, []);
+
+  useEffect(() => {
+    axios.get("/api/content").then((r) => {
+      setContent(r.data);
+      loadPage(pageId, r.data, { selectFirstSection: true });
+    });
+  }, [loadPage]);
+
+  const onPageChange = (id, opts = {}) => {
+    const { selectFirstSection = false } = opts;
+    if (id === pageId) {
+      if (selectFirstSection) {
+        setChromeSelected(false);
+        setChromeFocus(null);
+        const sid = pickDefaultSectionId(sections);
+        if (sid) setSelectedId(sid);
+      }
+      return;
+    }
+    if (dirty && !window.confirm("You have unsaved changes on this page. Switch anyway?")) return;
+    setPageId(id);
+    loadPage(id, content, { selectFirstSection });
+  };
+
+  const changePreviewDevice = (id) => {
+    if (id === previewDevice) return;
+    setPreviewDevice(id);
+    setDeviceSwitching(true);
+    canvasWrapRef.current?.scrollTo({ top: 0, behavior: "instant" });
+    if (deviceSwitchTimer.current) clearTimeout(deviceSwitchTimer.current);
+    deviceSwitchTimer.current = setTimeout(() => setDeviceSwitching(false), 450);
+  };
+
+  useEffect(
+    () => () => {
+      if (deviceSwitchTimer.current) clearTimeout(deviceSwitchTimer.current);
+    },
+    []
+  );
+
+  const cleanLegacyPage = (page = {}) => ({
+    ...page,
+    sections: { enabled: page.sections?.enabled ?? false, items: page.sections?.items ?? [] },
+    puck: page.puck ? { ...page.puck, enabled: false } : undefined,
+    wysiwyg: page.wysiwyg ? { ...page.wysiwyg, enabled: false } : undefined,
+  });
+
+  const persist = async (nextSections, nextEnabled) => {
+    setSaving(true);
+    setStatus("");
+    let base = content;
+    try {
+      const fresh = await axios.get("/api/content");
+      base = fresh.data || content;
+    } catch {
+      /* use in-memory content */
+    }
+    const next = {
+      ...base,
+      settings: { ...(base.settings || {}), ...(content.settings || {}) },
+      pages: {
+        ...(base.pages || {}),
+        ...(content.pages || {}),
+        [pageId]: cleanLegacyPage({
+          ...(content.pages?.[pageId] || base.pages?.[pageId] || {}),
+          sections: { enabled: nextEnabled, items: nextSections },
+        }),
+      },
+    };
+    try {
+      await axios.put("/api/content", next, { headers: authHeaders() });
+      setContent(next);
+      const msg = nextEnabled ? "Published — live site updated." : "Saved as draft.";
+      setStatus(msg);
+      setToast({ message: msg, type: "success" });
+      setDirty(false);
+      savedSnapshot.current = JSON.stringify({ sections: nextSections, enabled: nextEnabled });
+    } catch {
+      const msg = "Save failed. Is the API running on port 3001?";
+      setStatus(msg);
+      setToast({ message: msg, type: "error" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const save = () => persist(sections, enabled);
+  const publish = () => {
+    setEnabled(true);
+    persist(sections, true);
+  };
+
+  const resetTemplate = () => {
+    if (!window.confirm("Reset this page to the default template? Unsaved edits will be lost.")) return;
+    const defaults = getDefaultSections(pageId);
+    setSections(defaults);
+    setSelectedId(null);
+    markDirty();
+  };
+
+  const useBuiltInPages = async () => {
+    if (!window.confirm("Turn off custom pages and use the built-in site design everywhere?")) return;
+    const pages = { ...content.pages };
+    for (const id of PAGE_OPTIONS.map((p) => p.id)) {
+      pages[id] = cleanLegacyPage({
+        ...(pages[id] || {}),
+        sections: { enabled: false, items: pages[id]?.sections?.items || getDefaultSections(id) },
+      });
+    }
+    const next = { ...content, pages };
+    setSaving(true);
+    try {
+      await axios.put("/api/content", next, { headers: authHeaders() });
+      setContent(next);
+      setEnabled(false);
+      loadPage(pageId, next);
+      setStatus("Using built-in pages. Open Preview live to see the default site.");
+    } catch {
+      setStatus("Could not save. Start the API (npm run dev).");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const selected = sections.find((s) => s.id === selectedId);
+
+  const updateSection = (updated) => {
+    setSections((list) => list.map((s) => (s.id === updated.id ? normalizeSection(updated) : s)));
+    markDirty();
+  };
+
+  const patchSectionProp = (sectionId, key, value) => {
+    setSections((list) =>
+      list.map((s) =>
+        s.id === sectionId ? { ...s, props: { ...s.props, [key]: value } } : s
+      )
+    );
+    markDirty();
+  };
+
+  const updateSectionStyle = (sectionId, style) => {
+    setSections((list) =>
+      list.map((s) => (s.id === sectionId ? { ...s, style } : s))
+    );
+    markDirty();
+  };
+
+  const selectSection = (id) => {
+    setChromeSelected(false);
+    setSelectedId(id);
+  };
+
+  const selectChrome = (focus = null) => {
+    setSelectedId(null);
+    setChromeSelected(true);
+    setChromeFocus(focus);
+  };
+
+  const navigateFromHeader = (id) => {
+    onPageChange(id, { selectFirstSection: true });
+    const label = PAGE_OPTIONS.find((p) => p.id === id)?.label || id;
+    setToast({
+      message: `Editing ${label} — use the panel on the right for text & design`,
+      type: "success",
+    });
+  };
+
+  const updateSettings = (settings) => {
+    setContent((c) => ({ ...c, settings }));
+    markDirty();
+  };
+
+  useEffect(() => {
+    if (!selectedId) return;
+    const el = document.querySelector(`[data-ve-section="${selectedId}"]`);
+    el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [selectedId]);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setSelectedId(null);
+        setChromeSelected(false);
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+        e.preventDefault();
+        if (!saving) save();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [saving]);
+
+  const duplicateSection = (id) => {
+    const src = sections.find((s) => s.id === id);
+    if (!src) return;
+    const copy = { ...src, id: newId(), props: { ...src.props }, style: { ...src.style } };
+    const idx = sections.findIndex((s) => s.id === id);
+    const next = [...sections];
+    next.splice(idx + 1, 0, copy);
+    setSections(next);
+    setSelectedId(copy.id);
+    markDirty();
+  };
+
+  const deleteSection = (id) => {
+    if (!window.confirm("Remove this section?")) return;
+    setSections((list) => list.filter((s) => s.id !== id));
+    if (selectedId === id) setSelectedId(null);
+    markDirty();
+  };
+
+  const moveSection = (id, dir) => {
+    const idx = sections.findIndex((s) => s.id === id);
+    const next = idx + dir;
+    if (next < 0 || next >= sections.length) return;
+    const list = [...sections];
+    const [item] = list.splice(idx, 1);
+    list.splice(next, 0, item);
+    setSections(list);
+    markDirty();
+  };
+
+  const toggleSectionHidden = (id) => {
+    setSections((list) =>
+      list.map((s) => (s.id === id ? { ...s, hidden: !s.hidden } : s))
+    );
+    markDirty();
+  };
+
+  const resetSectionDefaults = (id) => {
+    const sec = sections.find((s) => s.id === id);
+    const def = sec && SECTION_TYPES[sec.type];
+    if (!sec || !def) return;
+    if (!window.confirm(`Reset “${def.label}” to default content and design?`)) return;
+    setSections((list) =>
+      list.map((s) =>
+        s.id === id
+          ? {
+              ...s,
+              props: { ...def.defaultProps },
+              style: defaultStyleForType(sec.type),
+              hidden: false,
+            }
+          : s
+      )
+    );
+    markDirty();
+    setToast({ message: `${def.label} reset to defaults`, type: "success" });
+  };
+
+  const onDragStart = () => setIsDragging(true);
+
+  const onDragEnd = (result) => {
+    setIsDragging(false);
+    const { source, destination } = result;
+    if (!destination) return;
+    const from = source.droppableId;
+    const to = destination.droppableId;
+    if (from !== "sidebar" && from !== "canvas") return;
+    if (to !== "sidebar" && to !== "canvas") return;
+    if (source.index === destination.index && from === to) return;
+
+    const list = [...sections];
+    const [item] = list.splice(source.index, 1);
+    list.splice(destination.index, 0, item);
+    setSections(list);
+    markDirty();
+  };
+
+  const addSection = () => {
+    const def = SECTION_TYPES[addType];
+    if (!def) return;
+    const item = {
+      id: newId(),
+      type: addType,
+      props: { ...def.defaultProps },
+      style: defaultStyleForType(addType),
+    };
+    setSections([...sections, item]);
+    setSelectedId(item.id);
+    setNewSectionId(item.id);
+    markDirty();
+    window.setTimeout(() => setNewSectionId(null), 600);
+  };
+
+  const previewPath = PAGE_PATH[pageId] || "/";
+  const activeDevice = PREVIEW_DEVICES.find((d) => d.id === previewDevice) || PREVIEW_DEVICES[0];
+  const previewSiteData = useMemo(() => mergeSiteContent(content), [content]);
+  const previewSiteValue = useMemo(
+    () => ({
+      settings: previewSiteData.settings,
+      practiceAreas: previewSiteData.practiceAreas,
+      testimonials: previewSiteData.testimonials,
+      features: previewSiteData.features,
+      loading: false,
+    }),
+    [previewSiteData]
+  );
+
+  const openSiteContent = (tab = "brand") => {
+    const sec = selected;
+    const t = sec?.type === "practiceAreas" ? "practice" : tab;
+    setSiteTab(t);
+    setEditorMode("site");
+  };
+
+  const modeTabs = (
+    <div className="ve-mode-tabs">
+      {EDITOR_MODES.map((m) => (
+        <button
+          key={m.id}
+          type="button"
+          className={editorMode === m.id ? "is-active" : ""}
+          onClick={() => setEditorMode(m.id)}
+        >
+          <i className={`fa-solid ${m.icon}`} /> {m.label}
+        </button>
+      ))}
+    </div>
+  );
+
+  if (editorMode === "site") {
+    return (
+      <div className="ve-root">
+        {modeTabs}
+        <SiteContentPanel
+          initialTab={siteTab}
+          content={content}
+          setContent={setContent}
+          onSaved={(saved) => setContent(saved)}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <PreviewNavProvider>
+    <div className="ve-root">
+      <EditorToast
+        message={toast.message}
+        type={toast.type}
+        onDone={() => setToast({ message: "", type: "success" })}
+      />
+      {modeTabs}
+      <header className="ve-toolbar">
+        <div>
+          <h1>Page Editor</h1>
+          <p>Drag sections to reorder · click to edit · publish when ready.</p>
+        </div>
+        <div className="ve-toolbar__actions">
+          <select
+            value={pageId}
+            onChange={(e) => onPageChange(e.target.value, { selectFirstSection: true })}
+          >
+            {PAGE_OPTIONS.map((p) => (
+              <option key={p.id} value={p.id}>{p.label}</option>
+            ))}
+          </select>
+          <label>
+            <input
+              type="checkbox"
+              checked={enabled}
+              onChange={(e) => {
+                setEnabled(e.target.checked);
+                markDirty();
+              }}
+            />
+            Use custom page (publish)
+          </label>
+          <button type="button" className="ve-btn" onClick={resetTemplate}>Reset template</button>
+          <button type="button" className="ve-btn" onClick={useBuiltInPages} disabled={saving}>Use built-in site</button>
+          <a href={previewPath} target="_blank" rel="noreferrer" className="ve-btn">Preview live</a>
+          <button type="button" className="ve-btn" onClick={save} disabled={saving}>Save draft</button>
+          <button type="button" className="ve-btn ve-btn--primary" onClick={publish} disabled={saving}>
+            Publish
+          </button>
+          {dirty && <span className="ve-status ve-status--dirty">Unsaved changes</span>}
+          {status && !dirty && <span className="ve-status">{status}</span>}
+        </div>
+      </header>
+
+      <PreviewDeviceBar
+        previewDevice={previewDevice}
+        setPreviewDevice={changePreviewDevice}
+        activeDevice={activeDevice}
+        switching={deviceSwitching}
+      />
+
+      <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+      <div className="ve-body">
+        <aside className="ve-sidebar">
+          <h3>Sections</h3>
+          <p className="ve-sidebar__hint">
+            <i className="fa-solid fa-grip-vertical" aria-hidden="true" /> Drag to reorder (sidebar or preview)
+          </p>
+            <Droppable droppableId="sidebar">
+              {(provided, snapshot) => (
+                <div
+                  className={`ve-section-list${snapshot.isDraggingOver ? " ve-section-list--over" : ""}`}
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {sections.map((s, index) => {
+                    const def = SECTION_TYPES[s.type];
+                    return (
+                      <Draggable key={s.id} draggableId={`sidebar-${s.id}`} index={index}>
+                        {(drag, dragSnapshot) => (
+                          <div
+                            ref={drag.innerRef}
+                            {...drag.draggableProps}
+                            role="button"
+                            tabIndex={0}
+                            className={`ve-section-item${selectedId === s.id ? " is-selected" : ""}${dragSnapshot.isDragging ? " ve-section-item--dragging" : ""}`}
+                            onClick={() => selectSection(s.id)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                selectSection(s.id);
+                              }
+                            }}
+                          >
+                            <span
+                              className="ve-section-item__handle"
+                              {...drag.dragHandleProps}
+                              title="Drag to reorder"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <i className="fa-solid fa-grip-vertical" aria-hidden="true" />
+                            </span>
+                            <i className={`fa-solid ${def?.icon || "fa-cube"}`} />
+                            {def?.label || s.type}
+                          </div>
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          <div className="ve-add-section">
+            <select value={addType} onChange={(e) => setAddType(e.target.value)}>
+              {Object.entries(SECTION_TYPES).map(([key, def]) => (
+                <option key={key} value={key}>{def.label}</option>
+              ))}
+            </select>
+            <button type="button" className="ve-btn ve-btn--primary" style={{ width: "100%" }} onClick={addSection}>
+              + Add section
+            </button>
+          </div>
+        </aside>
+
+        <div
+          ref={canvasWrapRef}
+          className={`ve-canvas-wrap${isDragging ? " ve-canvas-wrap--dragging" : ""}`}
+        >
+          <div
+            className={`ve-canvas${previewDevice !== "desktop" ? ` ve-canvas--${previewDevice}` : ""}${deviceSwitching ? " ve-canvas--switching" : ""}${isDragging ? " ve-canvas--dragging" : ""}`}
+            style={previewDevice !== "desktop" ? { maxWidth: activeDevice.width } : undefined}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setSelectedId(null);
+                setChromeSelected(false);
+              }
+            }}
+          >
+            <p className="ve-canvas-hint">
+              <i className="fa-solid fa-hand-pointer" aria-hidden="true" />
+              {activeDevice.label} ({activeDevice.width}px)
+              {previewDevice === "mobile" || previewDevice === "tablet"
+                ? " — tap ☰ for pages · drag ⠿ to reorder sections"
+                : " — drag ⠿ to reorder · click to edit"}
+            </p>
+            <SiteDataContext.Provider value={previewSiteValue}>
+            <ActiveSectionProvider>
+            <PreviewDeviceMenuReset device={previewDevice} />
+            <PreviewChrome
+              device={previewDevice}
+              settings={normalizeBrandSettings(content.settings || {})}
+              isSelected={chromeSelected}
+              onSelect={selectChrome}
+            />
+            {(previewDevice === "mobile" || previewDevice === "tablet") && (
+              <PreviewCanvasMenu
+                ctaLabel={content.settings?.headerCtaLabel}
+                ctaLink={content.settings?.headerCtaLink}
+              />
+            )}
+            {!enabled && (
+              <p className="ve-canvas-sync-note">
+                <i className="fa-solid fa-circle-info" aria-hidden="true" />
+                Live site uses the built-in homepage until you enable <strong>Use custom page</strong> and publish.
+              </p>
+            )}
+            {sections.length === 0 ? (
+              <div className="ve-empty-canvas">No sections — add one from the left panel.</div>
+            ) : (
+              <Droppable droppableId="canvas">
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className={`ve-canvas-sections${snapshot.isDraggingOver ? " ve-canvas-sections--over" : ""}`}
+                  >
+                    {sections.map((section, index) => {
+                      const def = SECTION_TYPES[section.type];
+                      const Component = def?.component;
+                      if (!Component) return null;
+                      const isSel = selectedId === section.id;
+                      return (
+                        <Draggable key={section.id} draggableId={`canvas-${section.id}`} index={index}>
+                          {(drag, dragSnapshot) => (
+                            <div
+                              ref={drag.innerRef}
+                              {...drag.draggableProps}
+                              data-ve-section={section.id}
+                              className={`ve-block${section.hidden ? " ve-block--hidden" : ""}${isSel ? " is-selected" : ""}${newSectionId === section.id ? " ve-block--new" : ""}${dragSnapshot.isDragging ? " ve-block--dragging" : ""}`}
+                              onClick={(e) => {
+                                if (dragSnapshot.isDragging) return;
+                                if (e.target.closest(".ve-block__drag-handle")) return;
+                                if (e.target.closest(".ve-inline-edit")) return;
+                                if (e.target.closest("a, button, .btn, .hero-cta")) return;
+                                selectSection(section.id);
+                              }}
+                            >
+                              <div className="ve-block__bar">
+                                <span
+                                  className="ve-block__drag-handle"
+                                  {...drag.dragHandleProps}
+                                  title="Drag to reorder"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <i className="fa-solid fa-grip-vertical" aria-hidden="true" />
+                                </span>
+                                <span className="ve-block__label">
+                                  {def.label}
+                                  {section.hidden ? " (hidden)" : ""}
+                                </span>
+                              </div>
+                              <StyledSectionWrap
+                                sectionType={section.type}
+                                style={section.style}
+                                heroTone={section.props?.heroTone}
+                              >
+                                <VeEditScope
+                                  isSelected={isSel}
+                                  fieldKeys={(def.fields || []).map((f) => f.key)}
+                                  onPatch={(key, value) => patchSectionProp(section.id, key, value)}
+                                >
+                                  <Component {...(section.props || {})} />
+                                </VeEditScope>
+                              </StyledSectionWrap>
+                            </div>
+                          )}
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            )}
+            </ActiveSectionProvider>
+            </SiteDataContext.Provider>
+          </div>
+        </div>
+
+        {chromeSelected ? (
+          <SiteHeaderInspector
+            settings={content.settings || {}}
+            focusField={chromeFocus}
+            currentPageId={pageId}
+            onNavigatePage={navigateFromHeader}
+            onChange={updateSettings}
+            onOpenSiteContent={openSiteContent}
+          />
+        ) : (
+          <SectionInspector
+            key={selected?.id || "empty"}
+            section={selected}
+            pageLabel={PAGE_OPTIONS.find((p) => p.id === pageId)?.label}
+            onChange={(updated) => {
+              updateSection(updated);
+              setSelectedId(updated.id);
+            }}
+            onStyleChange={(style) => selected && updateSectionStyle(selected.id, style)}
+            onOpenSiteContent={openSiteContent}
+            onDuplicate={duplicateSection}
+            onDelete={deleteSection}
+            onMove={moveSection}
+            onToggleHidden={toggleSectionHidden}
+            onResetDefaults={resetSectionDefaults}
+          />
+        )}
+      </div>
+      </DragDropContext>
+    </div>
+    </PreviewNavProvider>
+  );
+}

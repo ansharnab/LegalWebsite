@@ -1,0 +1,169 @@
+{
+  "pages": {
+    "home": {
+      "sections": {
+        "enabled": true,
+        "items": [
+          {
+            "id": "s1",
+            "type": "legalHero",
+            "props": {
+              "eyebrow": "Advocate · New Delhi",
+              "title": "Research-Driven Advocacy\nfor Complex Legal Challenges.",
+              "subtitle": "Deputy Counsel at the Delhi International Arbitration Centre. LLM (Business Laws), NLSIU · UGC-NET. Insolvency, arbitration, corporate, IP, and cyber law.",
+              "primaryLabel": "Schedule Consultation",
+              "primaryLink": "#contact",
+              "secondaryLabel": "Practice Areas",
+              "secondaryLink": "#practice-areas",
+              "image": "/images/saumya-upadhyay.jpg",
+              "backgroundImage": "/images/advocacy/hero-courthouse.jpg",
+              "stat1": "6+",
+              "label1": "Years Experience",
+              "stat2": "LLM",
+              "label2": "NLSIU Bangalore",
+              "stat3": "UGC-NET",
+              "label3": "Qualified",
+              "heroTone": "lavender",
+              "imagePosition": "right"
+            },
+            "style": {
+              "theme": "lavenderLight",
+              "background": "linear-gradient(165deg, #ffffff 0%, #f7f2fb 42%, #efe6f8 100%)",
+              "textColor": "#475569",
+              "headingColor": "#1e293b",
+              "accentColor": "#734f96",
+              "padding": "default",
+              "textAlign": "left",
+              "fontScale": 1
+            }
+          },
+          {
+            "id": "s2",
+            "type": "legalAbout",
+            "props": {
+              "title": "Professional Profile",
+              "body": "I am an Advocate and a conscientious student of law with a passion for researching and exploring the unexplored. I currently serve as Deputy Counsel at the Delhi International Arbitration Centre. My core interests include insolvency law, alternative dispute resolution, contract law, constitutional law, corporate laws (especially intellectual property), cyber law including data protection, competition law, and taxation.\n\nI hold an LLM in Business Law from the National Law School of India University, Bangalore, and am UGC-NET qualified. I am enrolled with the Bar Council of India and the Bar Council of Bihar. Alongside practice, I teach as Online Faculty at LawSikho and have appeared before the Supreme Court, Delhi High Court, district courts, and tribunals on civil, commercial, insolvency, and arbitration matters.",
+              "advocateName": "Advocate Saumya Upadhyay",
+              "advocateHeadline": "Advocate | LLM (Business Laws), NLSIU | UGC-NET",
+              "advocateRole": "Deputy Counsel, Delhi International Arbitration Centre",
+              "buttonLabel": "Get in Touch",
+              "buttonLink": "#contact",
+              "image": "/images/saumya-upadhyay.jpg"
+            },
+            "style": {
+              "theme": "light",
+              "background": "",
+              "textColor": "",
+              "headingColor": "",
+              "accentColor": "",
+              "padding": "default",
+              "textAlign": "left",
+              "fontScale": 1
+            }
+          },
+          {
+            "id": "s3",
+            "type": "practiceAreas",
+            "props": {
+              "title": "Practice Areas",
+              "subtitle": "Insolvency, arbitration, corporate, intellectual property, cyber law, and litigation."
+            },
+            "style": {
+              "theme": "light",
+              "background": "",
+              "textColor": "",
+              "headingColor": "",
+              "accentColor": "",
+              "padding": "default",
+              "textAlign": "left",
+              "fontScale": 1
+            }
+          },
+          {
+            "id": "s4",
+            "type": "testimonials",
+            "props": {
+              "title": "Professional Endorsements",
+              "subtitle": "Endorsements from colleagues and the legal community."
+            },
+            "style": {
+              "theme": "light",
+              "background": "",
+              "textColor": "",
+              "headingColor": "",
+              "accentColor": "",
+              "padding": "default",
+              "textAlign": "left",
+              "fontScale": 1
+            }
+          },
+          {
+            "id": "s5",
+            "type": "legalContact",
+            "props": {
+              "title": "Get In Touch",
+              "subtitle": "Reach out to discuss insolvency, arbitration, corporate, or litigation matters. Based in New Delhi — connect via the form or LinkedIn."
+            },
+            "style": {
+              "theme": "dark",
+              "background": "",
+              "textColor": "",
+              "headingColor": "",
+              "accentColor": "",
+              "padding": "default",
+              "textAlign": "left",
+              "fontScale": 1
+            }
+          },
+          {
+            "id": "s6",
+            "type": "legalCta",
+            "props": {
+              "title": "Need legal guidance?",
+              "text": "Book a consultation — inquiries are reviewed promptly.",
+              "buttonLabel": "Contact",
+              "buttonLink": "#contact"
+            },
+            "style": {
+              "theme": "lavenderLight",
+              "background": "linear-gradient(165deg, #ffffff 0%, #f7f2fb 42%, #efe6f8 100%)",
+              "textColor": "#475569",
+              "headingColor": "#1e293b",
+              "accentColor": "#734f96",
+              "padding": "default",
+              "textAlign": "center",
+              "fontScale": 1
+            }
+          }
+        ]
+      }
+    }
+  },
+  "settings": {
+    "logoText": "Saumya",
+    "logoAccent": "Upadhyay",
+    "logoTagline": "Advocate · New Delhi",
+    "logoImage": "/images/brand-mark.svg",
+    "advocateName": "Advocate Saumya Upadhyay",
+    "advocateHeadline": "Advocate | LLM (Business Laws), NLSIU | UGC-NET",
+    "advocateRole": "Deputy Counsel, Delhi International Arbitration Centre",
+    "advocateLocation": "New Delhi, Delhi, India",
+    "linkedInUrl": "https://in.linkedin.com/in/saumya-upadhyay",
+    "headerCtaLabel": "Schedule Consultation",
+    "headerCtaLink": "#contact",
+    "email": "",
+    "phone": "",
+    "address": "New Delhi, Delhi, India",
+    "footerTagline": "Research-driven advocacy in insolvency, arbitration, corporate law, and dispute resolution — New Delhi, India.",
+    "disclaimerParagraph1": "The Bar Council of India does not permit advertisement or solicitation by advocates in any form or manner. By accessing this website, you acknowledge and confirm that you are seeking information relating to Advocate Saumya Upadhyay of your own accord and that there has been no form of solicitation, advertisement or inducement.",
+    "disclaimerParagraph2": "The content of this website is for informational purposes only and should not be interpreted as soliciting or advertisement. No material/information provided on this website should be construed as legal advice. The Firm shall not be liable for the consequences of any action taken by relying on the material/information provided on this website."
+  },
+  "site": {
+    "features": [
+      "LLM (Business Laws), NLSIU Bangalore",
+      "Deputy Counsel, Delhi International Arbitration Centre",
+      "UGC-NET | Bar Council of India Enrolled",
+      "Courts, Tribunals & Arbitration Experience"
+    ]
+  }
+}

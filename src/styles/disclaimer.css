@@ -1,0 +1,121 @@
+/* Full-screen disclaimer gate — must accept before site loads */
+
+.disclaimer-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(196, 181, 253, 0.35), transparent 55%),
+    linear-gradient(165deg, #f7f2fb 0%, #efe6f8 40%, #faf9fc 100%);
+  overflow-y: auto;
+  animation: disclaimer-bg 12s ease-in-out infinite alternate;
+}
+
+@keyframes disclaimer-bg {
+  from {
+    filter: hue-rotate(0deg);
+  }
+  to {
+    filter: hue-rotate(8deg);
+  }
+}
+
+.disclaimer-gate__card {
+  width: min(560px, 100%);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-xl, 24px);
+  padding: 2rem 1.75rem 1.75rem;
+  box-shadow:
+    0 24px 64px rgba(91, 60, 136, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+}
+
+.disclaimer-gate__icon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1rem;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 1.25rem;
+  color: #fff;
+  background: linear-gradient(145deg, var(--color-accent), var(--color-accent-dark));
+  box-shadow: 0 8px 20px rgba(115, 79, 150, 0.28);
+}
+
+.disclaimer-gate__icon--image {
+  background: transparent;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.disclaimer-gate__icon--image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(115, 79, 150, 0.28);
+}
+
+.disclaimer-gate__eyebrow {
+  margin: 0 0 0.5rem;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent-dark);
+}
+
+.disclaimer-gate__title {
+  margin: 0 0 1.25rem;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4vw, 1.85rem);
+  color: var(--color-heading);
+  border-bottom: 2px solid rgba(115, 79, 150, 0.2);
+  padding-bottom: 0.85rem;
+}
+
+.disclaimer-gate__body {
+  max-height: min(42vh, 320px);
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--color-text);
+}
+
+.disclaimer-gate__body p {
+  margin: 0 0 1rem;
+}
+
+.disclaimer-gate__body p:last-child {
+  margin-bottom: 0;
+}
+
+.disclaimer-gate__required {
+  margin: 0 0 1.25rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.disclaimer-gate__btn {
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  font-size: 0.95rem;
+}
+
+body.disclaimer-gate-open {
+  overflow: hidden;
+}
