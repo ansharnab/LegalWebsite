@@ -865,7 +865,7 @@ p {
   position: relative;
   padding: calc(var(--header-h) + 2.5rem) 0 3.5rem;
   overflow: hidden;
-  min-height: min(92vh, 820px);
+  min-height: min(88vh, 820px);
   display: flex;
   align-items: center;
 }
@@ -2028,12 +2028,6 @@ p {
 
 .site-header--compact .site-header__shell {
   border-radius: 16px;
-}
-
-@media (max-width: 900px) {
-  .hero__scroll-hint {
-    display: none;
-  }
 }
 
 @media (max-width: 600px) {

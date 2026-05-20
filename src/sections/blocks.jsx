@@ -250,10 +250,6 @@ export function LegalHeroBlock({
           </div>
         </div>
       </div>
-      <a href="#about" className="hero__scroll-hint" aria-label="Scroll to about section">
-        <span>Explore</span>
-        <i className="fa-solid fa-chevron-down" aria-hidden="true" />
-      </a>
     </section>
   );
 }

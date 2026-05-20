@@ -19,7 +19,7 @@ export default function Footer({ settings = {} }) {
           <p>{tagline}</p>
         </div>
         <div>
-          <h4>Explore</h4>
+          <h4>Pages</h4>
           <p>
             <Link to="/articles">Articles</Link>
           </p>
